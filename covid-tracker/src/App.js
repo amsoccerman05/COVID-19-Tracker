@@ -16,6 +16,9 @@ function App() {
       <footer>
         <p>Powered by disease.sh</p>
       </footer>
+      <foot>
+      <p> Created by Aiden Morrison</p>
+      </foot>
     </div>
   );
 }
