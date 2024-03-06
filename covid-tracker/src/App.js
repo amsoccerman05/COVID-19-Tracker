@@ -14,7 +14,7 @@ function App() {
         <CovidTracker />
       </main>
       <footer>
-        <p>Powered by disease.sh</p>
+        <p>Powered by worldometers.info</p>
       </footer>
       <foot>
       <p> Created by Aiden Morrison</p>

@@ -1,40 +1,52 @@
-// CovidTracker.js
+  import React, { useState, useEffect } from 'react';
+  import axios from 'axios';
+  import cheerio from 'cheerio';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+  const CovidTracker = () => {
+    const [covidData, setCovidData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-const CovidTracker = () => {
-  const [covidData, setCovidData] = useState(null);
-  const [loading, setLoading] = useState(true);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get('https://www.worldometers.info/coronavirus/');
+          const html = response.data;
+          const $ = cheerio.load(html);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://disease.sh/v3/covid-19/all');
-        setCovidData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching COVID-19 data:', error);
-      }
-    };
+          // Extracting data from the HTML
+          const totalCases = $('#maincounter-wrap > div > span').eq(0).text().trim();
+          const totalDeaths = $('#maincounter-wrap > div > span').eq(1).text().trim();
+          const totalRecovered = $('#maincounter-wrap > div > span').eq(2).text().trim();
 
-    fetchData();
-  }, []);
+          // Setting the extracted data to state
+          setCovidData({
+            totalCases,
+            totalDeaths,
+            totalRecovered
+          });
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching COVID-19 data:', error);
+        }
+      };
 
-  return (
-    <div>
-      <h1>Global COVID-19 Tracker</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          <p>Total cases: {covidData.cases}</p>
-          <p>Total deaths: {covidData.deaths}</p>
-          <p>Total recovered: {covidData.recovered}</p>
-        </div>
-      )}
-    </div>
-  );
-};
+      fetchData();
+    }, []);
 
-export default CovidTracker;
+    return (
+      <div>
+        <h1>Global COVID-19 Tracker</h1>
+        {loading ? (
+          <p> sadness </p>
+        ) : (
+          <div>
+            <p>Total cases: {covidData.totalCases}</p>
+            <p>Total deaths: {covidData.totalDeaths}</p>
+            <p>Total recovered: {covidData.totalRecovered}</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  export default CovidTracker;
